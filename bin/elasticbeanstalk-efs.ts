@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { WordpressStack } from '../lib/wordpress-stack';
+import { ElasticbeanstalkEfsStack } from '../lib/elasticbeanstalk-efs-stack';
 
 const app = new cdk.App();
-new WordpressStack(app, 'WordpressStack', {
+new ElasticbeanstalkEfsStack(app, 'ElasticbeanstalkEfsStack', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */

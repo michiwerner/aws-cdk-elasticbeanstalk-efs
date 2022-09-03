@@ -26,7 +26,7 @@ jobs:
       - name: CDK Bootstrap
         run: yarn cdk bootstrap
       - name: CDK Deploy
-        run: yarn cdk deploy WordpressStack --require-approval never
+        run: yarn cdk deploy ElasticbeanstalkEfsStack --require-approval never
       - name: CDK Destroy
         if: always()
-        run: yarn cdk destroy -f WordpressStack
+        run: yarn cdk destroy -f ElasticbeanstalkEfsStack
