@@ -11,6 +11,7 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     const ebServiceRole = new iam.Role(this, 'elasticbeanstalk-efs-stack-service-role', {
+      roleName: 'elasticbeanstalk-efs-stack-eb-service-role',
       assumedBy: new iam.ServicePrincipal('elasticbeanstalk.amazonaws.com', {
         conditions: {
           StringEquals: {
@@ -24,6 +25,7 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
       ]
     });
     const ebInstanceRole = new iam.Role(this, 'elasticbeanstalk-efs-stack-ec2-role', {
+      roleName: 'elasticbeanstalk-efs-stack-ec2-role',
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
       managedPolicies: [
           iam.ManagedPolicy.fromManagedPolicyArn(this,'AWSElasticBeanstalkWebTier', 'arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier'),
@@ -33,7 +35,8 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
     });
 
     const ebInstanceProfile = new iam.CfnInstanceProfile(this, 'elasticbeanstalk-efs-stack-instance-profile', {
-      roles: [ebInstanceRole.roleId]
+      instanceProfileName: 'elasticbeanstalk-efs-stack-instance-profile',
+      roles: [ebInstanceRole.roleName]
     });
     ebInstanceProfile.node.addDependency(ebInstanceRole);
     const vpc = new ec2.Vpc(this, 'elasticbeanstalk-efs-stack-vpc', {
@@ -105,7 +108,7 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
         {
           namespace: 'aws:elasticbeanstalk:environment',
           optionName: 'ServiceRole',
-          value: ebServiceRole.roleId
+          value: ebServiceRole.roleName
         },
         {
           namespace: 'aws:autoscaling:launchconfiguration',
