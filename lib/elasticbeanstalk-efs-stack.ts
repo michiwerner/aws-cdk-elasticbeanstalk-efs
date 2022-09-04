@@ -20,7 +20,7 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
         }
       }),
       managedPolicies: [
-        iam.ManagedPolicy.fromManagedPolicyArn(this,'AWSElasticBeanstalkEnhancedHealth', 'arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth'),
+        iam.ManagedPolicy.fromManagedPolicyArn(this, 'AWSElasticBeanstalkEnhancedHealth', 'arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth'),
         iam.ManagedPolicy.fromManagedPolicyArn(this, 'AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy', 'arn:aws:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy'),
       ]
     });
@@ -28,9 +28,10 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
       roleName: 'elasticbeanstalk-efs-stack-ec2-role',
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
       managedPolicies: [
-          iam.ManagedPolicy.fromManagedPolicyArn(this,'AWSElasticBeanstalkWebTier', 'arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier'),
-          iam.ManagedPolicy.fromManagedPolicyArn(this, 'AWSElasticBeanstalkWorkerTier', 'arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier'),
-          iam.ManagedPolicy.fromManagedPolicyArn(this, 'AWSElasticBeanstalkMulticontainerDocker', 'arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker'),
+        iam.ManagedPolicy.fromManagedPolicyArn(this, 'AWSElasticBeanstalkWebTier', 'arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier'),
+        iam.ManagedPolicy.fromManagedPolicyArn(this, 'AWSElasticBeanstalkWorkerTier', 'arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier'),
+        iam.ManagedPolicy.fromManagedPolicyArn(this, 'AWSElasticBeanstalkMulticontainerDocker', 'arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker'),
+        iam.ManagedPolicy.fromManagedPolicyArn(this, 'AmazonSSMManagedInstanceCore', 'arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore')
       ]
     });
 
@@ -101,6 +102,16 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
       versionLabel: ebDeployment.ref,
       optionSettings: [
         {
+          namespace: 'aws:elasticbeanstalk:application:environment',
+          optionName: 'FILE_SYSTEM_ID',
+          value: efsFileSystem.fileSystemId
+        },
+        {
+          namespace: 'aws:elasticbeanstalk:application:environment',
+          optionName: 'MOUNT_DIRECTORY',
+          value: '/mnt/docker-volumes'
+        },
+        {
           namespace: 'aws:elasticbeanstalk:environment',
           optionName: 'EnvironmentType',
           value: 'SingleInstance'
@@ -159,6 +170,11 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
           namespace: 'aws:elasticbeanstalk:healthreporting:system',
           optionName: 'SystemType',
           value: 'basic'
+        },
+        {
+          namespace: 'aws:elasticbeanstalk:environment:proxy',
+          optionName: 'ProxyServer',
+          value: 'none'
         },
       ]
     });
