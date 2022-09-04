@@ -68,19 +68,19 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
       performanceMode: efs.PerformanceMode.GENERAL_PURPOSE,
       securityGroup: efsSecGroup
     });
-    const efsAccessPointWPC = new efs.AccessPoint(this, 'elasticbeanstalk-efs-stack-efs-ap', {
-      fileSystem: efsFileSystem,
-      path: '/docker-volumes',
-      posixUser: {
-        uid: '1000',
-        gid: '1000'
-      },
-      createAcl: {
-        ownerUid: '1000',
-        ownerGid: '1000',
-        permissions: '0770'
-      }
-    });
+    // const efsAccessPointWPC = new efs.AccessPoint(this, 'elasticbeanstalk-efs-stack-efs-ap', {
+    //   fileSystem: efsFileSystem,
+    //   path: '/docker-volumes',
+    //   posixUser: {
+    //     uid: '1000',
+    //     gid: '1000'
+    //   },
+    //   createAcl: {
+    //     ownerUid: '1000',
+    //     ownerGid: '1000',
+    //     permissions: '0770'
+    //   }
+    // });
     const ebApplication = new elasticbeanstalk.CfnApplication(this, 'elasticbeanstalk-efs-stack-eb-application', {});
     const s3Asset = new s3assets.Asset(this, 'elasticbeanstalk-efs-stack-eb-deployment-asset', {
       path: path.join(__dirname, '..', 'assets', 'ebdeployment')
