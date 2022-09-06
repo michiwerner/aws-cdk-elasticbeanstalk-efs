@@ -7,11 +7,22 @@ import * as efs from 'aws-cdk-lib/aws-efs';
 import * as elasticbeanstalk from 'aws-cdk-lib/aws-elasticbeanstalk';
 import * as s3assets from 'aws-cdk-lib/aws-s3-assets';
 
+export interface ElasticbeanstalkEfsStackProps extends cdk.StackProps {
+  elasticbeanstalkServiceRoleName?: string,
+  elasticbeanstalkInstanceRoleName?: string,
+  elasticbeanstalkInstanceProfileName?: string,
+  vpcName?: string,
+  vpcSubnetNamesPrefix?: string,
+  elasticbeanstalkSecurityGroupName?: string,
+  efsSecurityGroupName?: string,
+  elasticbeanstalkEnvironmentName?: string
+}
+
 export class ElasticbeanstalkEfsStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props?: ElasticbeanstalkEfsStackProps) {
     super(scope, id, props);
     const ebServiceRole = new iam.Role(this, 'elasticbeanstalk-efs-stack-service-role', {
-      roleName: 'elasticbeanstalk-efs-stack-eb-service-role',
+      roleName: props?.elasticbeanstalkServiceRoleName || 'elasticbeanstalk-efs-stack-eb-service-role',
       assumedBy: new iam.ServicePrincipal('elasticbeanstalk.amazonaws.com', {
         conditions: {
           StringEquals: {
@@ -25,7 +36,7 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
       ]
     });
     const ebInstanceRole = new iam.Role(this, 'elasticbeanstalk-efs-stack-ec2-role', {
-      roleName: 'elasticbeanstalk-efs-stack-ec2-role',
+      roleName: props?.elasticbeanstalkInstanceRoleName || 'elasticbeanstalk-efs-stack-ec2-role',
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
       managedPolicies: [
         iam.ManagedPolicy.fromManagedPolicyArn(this, 'AWSElasticBeanstalkWebTier', 'arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier'),
@@ -36,16 +47,17 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
     });
 
     const ebInstanceProfile = new iam.CfnInstanceProfile(this, 'elasticbeanstalk-efs-stack-instance-profile', {
-      instanceProfileName: 'elasticbeanstalk-efs-stack-instance-profile',
+      instanceProfileName: props?.elasticbeanstalkInstanceProfileName || 'elasticbeanstalk-efs-stack-instance-profile',
       roles: [ebInstanceRole.roleName]
     });
     ebInstanceProfile.node.addDependency(ebInstanceRole);
     const vpc = new ec2.Vpc(this, 'elasticbeanstalk-efs-stack-vpc', {
+      vpcName: props?.vpcName || 'elasticbeanstalk-efs-stack-vpc',
       cidr: '10.0.0.0/16',
       maxAzs: 2,
       subnetConfiguration: [
         {
-          name: 'ElasticbeanstalkEfsStackPublic',
+          name: props?.vpcSubnetNamesPrefix || 'ElasticbeanstalkEfsStackPublic',
           subnetType: ec2.SubnetType.PUBLIC,
           cidrMask: 24,
           mapPublicIpOnLaunch: true
@@ -54,10 +66,12 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
     });
     const publicSubnetIds = vpc.publicSubnets.map((value) => value.subnetId);
     const efsSecGroup = new ec2.SecurityGroup(this, 'elasticbeanstalk-efs-stack-efs-sg', {
+      securityGroupName: props?.efsSecurityGroupName || 'elasticbeanstalk-efs-stack-efs-sg',
       vpc: vpc,
       allowAllOutbound: true
     });
     const ebSecGroup = new ec2.SecurityGroup(this, 'elasticbeanstalk-efs-stack-eb-sg', {
+      securityGroupName: props?.elasticbeanstalkSecurityGroupName || 'elasticbeanstalk-efs-stack-eb-sg',
       vpc: vpc,
       allowAllOutbound: true
     });
@@ -98,7 +112,7 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
     ebDeployment.node.addDependency(ebApplication);
     const ebEnvironment = new elasticbeanstalk.CfnEnvironment(this, 'elasticbeanstalk-efs-stack-environment', {
       applicationName: ebApplication.ref,
-      environmentName: 'elasticbeanstalk-efs-stack-env',
+      environmentName: props?.elasticbeanstalkEnvironmentName || 'elasticbeanstalk-efs-stack-env',
       solutionStackName: '64bit Amazon Linux 2 v3.4.19 running Docker',
       versionLabel: ebDeployment.ref,
       optionSettings: [
