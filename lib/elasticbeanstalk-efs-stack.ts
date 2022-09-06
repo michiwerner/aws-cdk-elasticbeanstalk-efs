@@ -6,7 +6,6 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as efs from 'aws-cdk-lib/aws-efs';
 import * as elasticbeanstalk from 'aws-cdk-lib/aws-elasticbeanstalk';
 import * as s3assets from 'aws-cdk-lib/aws-s3-assets';
-import { RemovalPolicy } from "aws-cdk-lib";
 
 export class ElasticbeanstalkEfsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -69,7 +68,7 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
       enableAutomaticBackups: false,
       performanceMode: efs.PerformanceMode.GENERAL_PURPOSE,
       securityGroup: efsSecGroup,
-      removalPolicy: RemovalPolicy.DESTROY
+      removalPolicy: cdk.RemovalPolicy.DESTROY
     });
     // const efsAccessPointWPC = new efs.AccessPoint(this, 'elasticbeanstalk-efs-stack-efs-ap', {
     //   fileSystem: efsFileSystem,
