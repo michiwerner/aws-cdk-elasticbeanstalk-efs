@@ -17,7 +17,7 @@ export interface ElasticbeanstalkEfsStackProps extends cdk.StackProps {
   efsSecurityGroupName?: string,
   efsFileSystemName?: string,
   elasticbeanstalkEnvironmentName?: string,
-  elasticbeanstalkApplicationName?: string
+  elasticbeanstalkApplicationName?: string,
   elasticbeanstalkSolutionStackName?: string
 }
 
