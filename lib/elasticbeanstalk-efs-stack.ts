@@ -100,7 +100,7 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
     //   }
     // });
     const ebApplication = new elasticbeanstalk.CfnApplication(this, 'elasticbeanstalk-efs-stack-eb-application', {
-      applicationName: props?.elasticbeanstalkApplicationName || 'elasticbeanstalk-efs-stack-eb-application'
+      applicationName: props?.elasticbeanstalkApplicationName || 'ElasticbeanstalkEfsStackApplication',
     });
     const s3Asset = new s3assets.Asset(this, 'elasticbeanstalk-efs-stack-eb-deployment-asset', {
       path: path.join(__dirname, '..', 'assets', 'ebdeployment')
