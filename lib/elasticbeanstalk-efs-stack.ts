@@ -15,6 +15,7 @@ export interface ElasticbeanstalkEfsStackProps extends cdk.StackProps {
   vpcSubnetNamesPrefix?: string,
   elasticbeanstalkSecurityGroupName?: string,
   efsSecurityGroupName?: string,
+  efsFileSystemName?: string,
   elasticbeanstalkEnvironmentName?: string,
   elasticbeanstalkApplicationName?: string
   elasticbeanstalkSolutionStackName?: string
@@ -79,6 +80,7 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
     });
     efsSecGroup.addIngressRule(ebSecGroup, ec2.Port.tcp(2049));
     const efsFileSystem = new efs.FileSystem(this, 'elasticbeanstalk-efs-stack-efs', {
+      fileSystemName: props?.efsFileSystemName || 'elasticbeanstalk-efs-stack-efs',
       vpc: vpc,
       encrypted: true,
       enableAutomaticBackups: false,
