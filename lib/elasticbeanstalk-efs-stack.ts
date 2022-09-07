@@ -15,7 +15,8 @@ export interface ElasticbeanstalkEfsStackProps extends cdk.StackProps {
   vpcSubnetNamesPrefix?: string,
   elasticbeanstalkSecurityGroupName?: string,
   efsSecurityGroupName?: string,
-  elasticbeanstalkEnvironmentName?: string
+  elasticbeanstalkEnvironmentName?: string,
+  elasticbeanstalkApplicationName?: string
 }
 
 export class ElasticbeanstalkEfsStack extends cdk.Stack {
@@ -97,7 +98,9 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
     //     permissions: '0770'
     //   }
     // });
-    const ebApplication = new elasticbeanstalk.CfnApplication(this, 'elasticbeanstalk-efs-stack-eb-application', {});
+    const ebApplication = new elasticbeanstalk.CfnApplication(this, 'elasticbeanstalk-efs-stack-eb-application', {
+      applicationName: props?.elasticbeanstalkApplicationName || 'elasticbeanstalk-efs-stack-eb-application'
+    });
     const s3Asset = new s3assets.Asset(this, 'elasticbeanstalk-efs-stack-eb-deployment-asset', {
       path: path.join(__dirname, '..', 'assets', 'ebdeployment')
     });
