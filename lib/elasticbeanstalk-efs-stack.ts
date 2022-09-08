@@ -42,6 +42,24 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
     const ebInstanceRole = new iam.Role(this, 'elasticbeanstalk-efs-stack-ec2-role', {
       roleName: props?.elasticbeanstalkInstanceRoleName || 'elasticbeanstalk-efs-stack-ec2-role',
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
+      inlinePolicies: {
+        AllowModifyInstanceCreditSpecification: new iam.PolicyDocument({
+          statements: [
+            new iam.PolicyStatement({
+              effect: iam.Effect.ALLOW,
+              actions: [
+                'ec2:ModifyInstanceCreditSpecification'
+              ],
+              resources: ['*'],
+              conditions: {
+                StringEquals: {
+                  'aws:ARN': '${ec2:SourceInstanceARN}'
+                }
+              }
+            })
+          ]
+        })
+      },
       managedPolicies: [
         iam.ManagedPolicy.fromManagedPolicyArn(this, 'AWSElasticBeanstalkWebTier', 'arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier'),
         iam.ManagedPolicy.fromManagedPolicyArn(this, 'AWSElasticBeanstalkWorkerTier', 'arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier'),
