@@ -2,6 +2,8 @@
 
 This is a sample CDK project that deploys an Elastic Beanstalk application with an EFS volume attached.
 
+[![.github/workflows/main.yml](https://github.com/michiwerner/aws-cdk-elasticbeanstalk-efs/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/michiwerner/aws-cdk-elasticbeanstalk-efs/actions/workflows/main.yml)
+
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file.
