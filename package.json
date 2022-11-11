@@ -2,7 +2,7 @@
   "name": "elasticbeanstalk-efs",
   "version": "0.1.0",
   "bin": {
-    "temp": "bin/elasticbeanstalk-efs.js"
+    "elasticbeanstalk-efs": "bin/elasticbeanstalk-efs.js"
   },
   "scripts": {
     "build": "tsc",
