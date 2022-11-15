@@ -75,7 +75,7 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
     ebInstanceProfile.node.addDependency(ebInstanceRole);
     const vpc = new ec2.Vpc(this, 'elasticbeanstalk-efs-stack-vpc', {
       vpcName: props?.vpcName || 'elasticbeanstalk-efs-stack-vpc',
-      cidr: props?.vpcCidr || '10.0.0.0/16',
+      ipAddresses: ec2.IpAddresses.cidr(props?.vpcCidr || '10.0.0.0/16'),
       maxAzs: 2,
       subnetConfiguration: [
         {
