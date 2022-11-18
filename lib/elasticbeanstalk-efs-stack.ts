@@ -138,7 +138,7 @@ export class ElasticbeanstalkEfsStack extends cdk.Stack {
     const ebEnvironment = new elasticbeanstalk.CfnEnvironment(this, 'elasticbeanstalk-efs-stack-environment', {
       applicationName: ebApplication.ref,
       environmentName: props?.elasticbeanstalkEnvironmentName || 'elasticbeanstalk-efs-stack-env',
-      solutionStackName: props?.elasticbeanstalkSolutionStackName || '64bit Amazon Linux 2 v3.4.19 running Docker',
+      solutionStackName: props?.elasticbeanstalkSolutionStackName || '64bit Amazon Linux 2 v3.5.1 running Docker',
       versionLabel: ebDeployment.ref,
       optionSettings: [
         {
