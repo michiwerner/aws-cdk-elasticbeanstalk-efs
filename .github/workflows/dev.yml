@@ -8,6 +8,8 @@ permissions:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT_NAME: dev
     steps:
       - name: checkout
         uses: actions/checkout@v3
