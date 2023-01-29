@@ -9,7 +9,7 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     env:
-      ENVIRONMENT_NAME: dev
+      ENVIRONMENT_NAME: dev${{ github.run_number }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
